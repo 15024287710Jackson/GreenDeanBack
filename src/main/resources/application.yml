@@ -1,0 +1,21 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:mysql://jp-tyo-dvm.sakurafrp.com:48811/mysql
+    username: root
+    password: GreenDean123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+
+#server.port=8080
+#spring.datasource.url=jdbc:mysql://localhost:3306/mysql
+#spring.datasource.username=root
+#spring.datasource.password=GreenDean123456
+#spring.datasource.driver-class-name=com.mysql.jdbc.Driver
+#mybatis.configuration.map-underscore-to-camel-case=true
+#mybatis.type-aliases-package==com.michael.springboards.model
