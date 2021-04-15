@@ -2,6 +2,7 @@ package com.example.demo.resgisterLogin.controller;
 
 import com.example.demo.duixiang.Animal;
 import com.example.demo.duixiang.UserInfo;
+import com.example.demo.resgisterLogin.action.LoginResponse;
 import com.example.demo.resgisterLogin.action.ResgisterResponse;
 import com.example.demo.resgisterLogin.action.ResgisterResquest;
 import com.example.demo.service.impl.UserServiceImpl;
@@ -60,26 +61,27 @@ public class ResgisterLoginController {
     }
 
     @PostMapping("/loginUser")
-    public ResgisterResponse loginController(@RequestBody ResgisterResquest logResquest){
+    public LoginResponse loginController(@RequestBody ResgisterResquest logResquest){
         String userName = logResquest.getUserName();
         String passWord = logResquest.getPassWord();
-        ResgisterResponse resgisterResponse = new ResgisterResponse();
+        LoginResponse loginResponse = new LoginResponse();
         UserInfo userInfos = new UserInfo();
         try{
             userInfos = userServiceImpl.loginContr(userName,passWord);
 
         }catch (Exception e){
-            resgisterResponse.setResult("N");
-            resgisterResponse.setMsg("登录失败");
+            loginResponse.setResult("N");
+            loginResponse.setMsg("登录失败");
             e.printStackTrace();
         }
         if(userInfos.getUserName().equals(userName) && userInfos.getPassWord().equals(passWord)){
-            resgisterResponse.setResult("Y");
-            resgisterResponse.setMsg("登录成功");
+            loginResponse.setResult("Y");
+            loginResponse.setMsg("登录成功");
+            loginResponse.setId(userInfos.getId());
         }else{
-            resgisterResponse.setResult("N");
-            resgisterResponse.setMsg("登录失败");
+            loginResponse.setResult("N");
+            loginResponse.setMsg("登录失败");
         }
-        return resgisterResponse;
+        return loginResponse;
     }
 }
