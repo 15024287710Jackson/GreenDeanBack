@@ -53,7 +53,7 @@ public class UpLoadFileController {
         // 这时候我们就需要在项目相对路径这里加上项目的名称demo-upload
 //        String newFilePath = filePath+"\\GreenDeanBack\\src\\main\\resources\\static\\images\\";
         //String newFilePath = "E:\\GreenDeanUpLoad\\picture\\";
-        String newFilePath = "/root/GreenDeanUpLoad/picture";
+        String newFilePath = "/root/GreenDeanUpLoad/picture/";
         //当然你也可以自己设置一个绝对路径用于图片上传，文件上传。
         //比如说：D:\\images\\
         File file1 = new File(newFilePath);
