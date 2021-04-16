@@ -1,6 +1,8 @@
 package com.example.demo.mapper;
 
 import com.example.demo.duixiang.UserInfo;
+import com.example.demo.upLoadFile.action.UserPicInfo;
+import com.example.demo.upLoadFile.action.UserVideoInfo;
 import org.apache.ibatis.annotations.*;
 
 import java.util.LinkedList;
@@ -24,6 +26,25 @@ public interface UserInfomationMapper {
     @Insert("INSERT INTO userinfomation(id,userName,passWord,emailAddress,telephoneNumber) VALUES (#{id,jdbcType=VARCHAR}" +
             ",#{userName,jdbcType=VARCHAR},#{passWord,jdbcType=VARCHAR},#{emailAddress,jdbcType=VARCHAR},#{telephoneNumber,jdbcType=VARCHAR})")
     int Resister(@Param("id") String id,@Param("userName") String userName,
-                    @Param("passWord") String passWord,@Param("emailAddress") String emailAddress,@Param("telephoneNumber") String telephoneNumber);
+                 @Param("passWord") String passWord,@Param("emailAddress") String emailAddress,
+                 @Param("telephoneNumber") String telephoneNumber);
+
+    @Insert("insert into UserPicture (Number,id, message,pictureUrl) values (#{number,jdbcType=VARCHAR},#{id,jdbcType=VARCHAR},#{message,jdbcType=VARCHAR},#{pictureUrl,jdbcType=VARCHAR})")
+    int insertPicInfo(@Param("number") String number,
+                      @Param("id") String id,
+                      @Param("message") String message,
+                      @Param("pictureUrl") String pictureUrl);
+
+    @Insert("insert into UserVideo (Number,id, message,videoUrl) values (#{number,jdbcType=VARCHAR},#{id,jdbcType=VARCHAR},#{message,jdbcType=VARCHAR},#{videoUrl,jdbcType=VARCHAR})")
+    int insertVideoInfo(@Param("number") String number,
+                      @Param("id") String id,
+                      @Param("message") String message,
+                      @Param("videoUrl") String videoUrl);
+
+    @Select("SELECT * from UserPicture where id = #{id,jdbcType=VARCHAR}")
+    List<UserPicInfo> selectUserPicInfo(@Param("id") String id);
+
+    @Select("SELECT * from UserVideo where id = #{id,jdbcType=VARCHAR}")
+    List<UserVideoInfo> selectUserVideoInfo(@Param("id") String id);
 
 }

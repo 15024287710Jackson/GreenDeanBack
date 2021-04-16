@@ -5,6 +5,15 @@ public class UpLoadPictureFileResquest {
     String url;
     String mes;
     String result;
+    String num;
+
+    public String getNum() {
+        return num;
+    }
+
+    public void setNum(String num) {
+        this.num = num;
+    }
 
     public String getResult() {
         return result;

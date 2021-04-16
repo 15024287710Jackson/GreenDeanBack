@@ -1,15 +1,17 @@
 package com.example.demo.upLoadFile.controller;
 
 
+import com.example.demo.service.impl.UserServiceImpl;
+import com.example.demo.upLoadFile.action.CheckInfoResquest;
 import com.example.demo.upLoadFile.action.UpLoadPictureFileResquest;
+import com.example.demo.upLoadFile.action.UserPicInfo;
+import com.example.demo.upLoadFile.action.UserVideoInfo;
 import com.example.demo.utils.FileUtil;
 import org.apache.ibatis.annotations.Param;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 
@@ -19,17 +21,23 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.UUID;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
 @RestController
 @RequestMapping("/upLoadFile")
 public class UpLoadFileController {
 
+    @Autowired
+    private UserServiceImpl userServiceImpl;
 
 
     @PostMapping("/upLoadPic")
-    public UpLoadPictureFileResquest uploadFile(@Param("file") MultipartFile file)  {
+
+
+    public UpLoadPictureFileResquest uploadFile(@Param("file") MultipartFile file,
+                                                @Param("id") String id,
+                                                @Param("Message") String Message)  {
         UpLoadPictureFileResquest upLoadPictureFileResquest = new UpLoadPictureFileResquest();
         if (file.isEmpty()){
             upLoadPictureFileResquest.setMes("上传的文件不能为空！请重新上传");
@@ -67,9 +75,19 @@ public class UpLoadFileController {
             fileOutputStream.write(file.getBytes());
             fileOutputStream.flush();
             fileOutputStream.close();
-            upLoadPictureFileResquest.setMes("上传成功");
-            upLoadPictureFileResquest.setResult("Y");
-            upLoadPictureFileResquest.setUrl("http://101.37.75.202:8081/images/"+newFileName);
+            SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+            String num =df.format(new Date());
+            int result = userServiceImpl.insertPicInfo(num,id,Message,"http://101.37.75.202:8081/images/"+newFileName);
+            if(result==1){
+                upLoadPictureFileResquest.setMes("上传成功");
+                upLoadPictureFileResquest.setResult("Y");
+                upLoadPictureFileResquest.setUrl("http://101.37.75.202:8081/images/"+newFileName);
+                upLoadPictureFileResquest.setNum(num);
+            }else{
+                upLoadPictureFileResquest.setMes("图片上传成功,但信息入库失败");
+                upLoadPictureFileResquest.setResult("N");
+                upLoadPictureFileResquest.setUrl("http://101.37.75.202:8081/images/"+newFileName);
+            }
 //            "localhost:8095/images/"+newFileName
             return upLoadPictureFileResquest;
         } catch (java.io.IOException e) {
@@ -80,9 +98,10 @@ public class UpLoadFileController {
         return upLoadPictureFileResquest;
     }
 
-
     @PostMapping("/upLoadVideo")
-    public UpLoadPictureFileResquest upLoadVideoFile(@Param("file") MultipartFile file){
+    public UpLoadPictureFileResquest upLoadVideoFile(@Param("file") MultipartFile file,
+                                                     @Param("id") String id,
+                                                     @Param("Message") String Message){
         //    @Value("${web.upload-path}")
         //String path="E://GreenDeanUpLoad//video";
         String path="/root/GreenDeanUpLoad/video";
@@ -93,9 +112,15 @@ public class UpLoadFileController {
             if (file != null) {
                 String fileName = FileUtil.upload(file, path, file.getOriginalFilename());
                 if (fileName != null) {
-                    upLoadPictureFileResquest.setMes("上传成功");
-                    upLoadPictureFileResquest.setResult("Y");
-                    upLoadPictureFileResquest.setUrl(imagePath+fileName);
+                    SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+                    String num =df.format(new Date());
+                    int result = userServiceImpl.insertVideoInfo(num,id,Message,imagePath+fileName);
+                    if(result==1){
+                        upLoadPictureFileResquest.setMes("上传成功");
+                        upLoadPictureFileResquest.setResult("Y");
+                        upLoadPictureFileResquest.setUrl(imagePath+fileName);
+                        upLoadPictureFileResquest.setNum(num);
+                    }
                     return upLoadPictureFileResquest;
                 }
             }
@@ -108,4 +133,19 @@ public class UpLoadFileController {
     }
 
 
+    @PostMapping("/selectUserPicInfos")
+    public List<UserPicInfo>  selectUserPicInfos(@RequestBody CheckInfoResquest checkInfoResquest){
+        String id = checkInfoResquest.getId();
+        List<UserPicInfo> userPicInfoList = new LinkedList<>();
+        userPicInfoList = userServiceImpl.selectUserPicInfo(id);
+        return userPicInfoList;
+    }
+
+    @PostMapping("/selectUserVideoInfos")
+    public List<UserVideoInfo> selectUserVideoInfos(@RequestBody CheckInfoResquest checkInfoResquest){
+        String id = checkInfoResquest.getId();
+        List<UserVideoInfo> userPicInfoList = new LinkedList<>();
+        userPicInfoList = userServiceImpl.selectUserVideoInfo(id);
+        return userPicInfoList;
+    }
 }
