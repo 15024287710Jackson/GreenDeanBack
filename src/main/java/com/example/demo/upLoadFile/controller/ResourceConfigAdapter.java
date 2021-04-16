@@ -13,7 +13,7 @@ public class ResourceConfigAdapter implements WebMvcConfigurer {
         //获取文件的真实路径
 //        String path = System.getProperty("user.dir")+"\\GreenDeanBack\\src\\main\\resources\\static\\images\\";
         //String path = "E:\\GreenDeanUpLoad\\picture\\";
-        String path = "/root/GreenDeanBack/picture";
+        String path = "/root/GreenDeanBack/picture/";
         String os = System.getProperty("os.name");
         if (os.toLowerCase().startsWith("win")) {
             registry.addResourceHandler("/images/**").
