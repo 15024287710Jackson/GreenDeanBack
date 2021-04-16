@@ -11,7 +11,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfigurer implements WebMvcConfigurer {
 
 //    @Value("${web.upload-path}")
-    private String mImagesPath="E:/GreenDeanUpLoad/video/";
+    private String mImagesPath="/root/GreenDeanUpLoad/video";
+    //private String mImagesPath="E:/GreenDeanUpLoad/video/";
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {

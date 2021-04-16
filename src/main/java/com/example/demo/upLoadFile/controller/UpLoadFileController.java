@@ -52,7 +52,8 @@ public class UpLoadFileController {
         //由于我是创建的多模块项目，所以获取到的项目运行路径为外层的项目路径，
         // 这时候我们就需要在项目相对路径这里加上项目的名称demo-upload
 //        String newFilePath = filePath+"\\GreenDeanBack\\src\\main\\resources\\static\\images\\";
-        String newFilePath = "E:\\GreenDeanUpLoad\\picture\\";
+        //String newFilePath = "E:\\GreenDeanUpLoad\\picture\\";
+        String newFilePath = "/root/GreenDeanUpLoad/picture";
         //当然你也可以自己设置一个绝对路径用于图片上传，文件上传。
         //比如说：D:\\images\\
         File file1 = new File(newFilePath);
@@ -68,7 +69,7 @@ public class UpLoadFileController {
             fileOutputStream.close();
             upLoadPictureFileResquest.setMes("上传成功");
             upLoadPictureFileResquest.setResult("Y");
-            upLoadPictureFileResquest.setUrl("http://109.166.36.56:54288/images/"+newFileName);
+            upLoadPictureFileResquest.setUrl("http://101.37.75.202:8081/images/"+newFileName);
 //            "localhost:8095/images/"+newFileName
             return upLoadPictureFileResquest;
         } catch (java.io.IOException e) {
@@ -83,9 +84,10 @@ public class UpLoadFileController {
     @PostMapping("/upLoadVideo")
     public UpLoadPictureFileResquest upLoadVideoFile(@Param("file") MultipartFile file){
         //    @Value("${web.upload-path}")
-        String path="E://GreenDeanUpLoad//video";
+        //String path="E://GreenDeanUpLoad//video";
+        String path="/root/GreenDeanUpLoad/video";
 //    @Value("${web.image-path}")
-        String imagePath="http://109.166.36.56:54288/video/";
+        String imagePath="http://101.37.75.202:8081/video/";
         UpLoadPictureFileResquest upLoadPictureFileResquest = new UpLoadPictureFileResquest();
         try {
             if (file != null) {

@@ -1,6 +1,6 @@
 package com.example.demo.duixiang;
 
-import com.sun.deploy.net.HttpResponse;
+//import com.sun.deploy.net.HttpResponse;
 
 public class Animal  {
     private String name;
