@@ -47,4 +47,22 @@ public interface UserInfomationMapper {
     @Select("SELECT * from UserVideo where id = #{id,jdbcType=VARCHAR}")
     List<UserVideoInfo> selectUserVideoInfo(@Param("id") String id);
 
+    @Delete("DELETE  from UserPicture where Number = #{Number,jdbcType=VARCHAR} ")
+    int delectPicInfo(@Param("Number") String Number);
+
+    @Delete("DELETE  from UserVideo where Number = #{Number,jdbcType=VARCHAR} ")
+    int delectVideoInfo(@Param("Number") String Number);
+
+    @Update("UPDATE UserPicture a set a.Message=#{message,jdbcType=VARCHAR}, a.pictureUrl=#{pictureUrl,jdbcType=VARCHAR} where a.Number=#{Number,jdbcType=VARCHAR} and a.id=#{id,jdbcType=VARCHAR}")
+    int updatePicInfo(@Param("Number") String number,
+                        @Param("id") String id,
+                        @Param("message") String message,
+                        @Param("pictureUrl") String pictureUrl);
+
+
+    @Update("UPDATE UserVideo a set a.message=#{message,jdbcType=VARCHAR}, a.videoUrl=#{videoUrl,jdbcType=VARCHAR} where a.Number=#{Number,jdbcType=VARCHAR} and a.id=#{id,jdbcType=VARCHAR}")
+    int updateVideoInfo(@Param("Number") String number,
+                      @Param("id") String id,
+                      @Param("message") String message,
+                      @Param("videoUrl") String videoUrl);
 }

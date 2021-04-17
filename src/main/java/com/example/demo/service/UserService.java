@@ -4,8 +4,10 @@ import com.example.demo.duixiang.UserInfo;
 import com.example.demo.mapper.UserInfomationMapper;
 import com.example.demo.upLoadFile.action.UserPicInfo;
 import com.example.demo.upLoadFile.action.UserVideoInfo;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -28,4 +30,12 @@ public interface UserService {
     List<UserPicInfo> selectUserPicInfo(String id);
 
     List<UserVideoInfo> selectUserVideoInfo(String id);
+
+    int delectPicInfo(String Number);
+
+    int delectVideoInfo(String Number);
+
+    int updatePicInfo(String number,String id,String message,String pictureUrl);
+
+    int updateVideoInfo(String number,String id,String message,String videoUrl);
 }

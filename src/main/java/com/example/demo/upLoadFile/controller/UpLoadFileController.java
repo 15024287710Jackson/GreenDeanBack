@@ -1,26 +1,15 @@
 package com.example.demo.upLoadFile.controller;
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.example.demo.service.impl.UserServiceImpl;
-import com.example.demo.upLoadFile.action.CheckInfoResquest;
-import com.example.demo.upLoadFile.action.UpLoadPictureFileResquest;
-import com.example.demo.upLoadFile.action.UserPicInfo;
-import com.example.demo.upLoadFile.action.UserVideoInfo;
+import com.example.demo.upLoadFile.action.*;
 import com.example.demo.utils.FileUtil;
 import org.apache.ibatis.annotations.Param;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -147,5 +136,63 @@ public class UpLoadFileController {
         List<UserVideoInfo> userPicInfoList = new LinkedList<>();
         userPicInfoList = userServiceImpl.selectUserVideoInfo(id);
         return userPicInfoList;
+    }
+
+    @PostMapping("/deleteUserPicInfos")
+    public JSONObject  deletePic(@RequestBody DeleteResquest deleteResquest){
+        String num = deleteResquest.getNum();
+        JSONObject jsonObject = new JSONObject();
+        int result = userServiceImpl.delectPicInfo(num);
+        if(result == 1){
+            jsonObject.put("result","1");
+        }else{
+            jsonObject.put("result","0");
+        }
+        return jsonObject;
+    }
+
+    @PostMapping("/deleteUserVideoInfos")
+    public JSONObject  deleteVideo(@RequestBody DeleteResquest deleteResquest){
+        String num = deleteResquest.getNum();
+        JSONObject jsonObject = new JSONObject();
+        int result = userServiceImpl.delectVideoInfo(num);
+        if(result == 1){
+            jsonObject.put("result","1");
+        }else{
+            jsonObject.put("result","0");
+        }
+        return jsonObject;
+    }
+
+    @RequestMapping("/updatePicInfos")
+    public JSONObject  updatePicInfos(@RequestBody UpdateResquest updateResquest){
+        String number = updateResquest.getNumber();
+        String id = updateResquest.getId();
+        String message = updateResquest.getMessage();
+        String pictureUrl = updateResquest.getPictureUrl();
+        JSONObject jsonObject = new JSONObject();
+        int result = userServiceImpl.updatePicInfo(number,id,message,pictureUrl);
+        if(result == 1){
+            jsonObject.put("result","1");
+        }else{
+            jsonObject.put("result","0");
+        }
+        return jsonObject;
+    }
+
+    @RequestMapping("/updateVideoInfos")
+    public JSONObject  updateVideoInfos(@RequestBody UpdateResquest updateResquest){
+        String number = updateResquest.getNumber();
+        String id = updateResquest.getId();
+        String message = updateResquest.getMessage();
+        String pictureUrl = updateResquest.getPictureUrl();
+        JSONObject jsonObject = new JSONObject();
+        int result = userServiceImpl.updateVideoInfo(number,id,message,pictureUrl);
+        if(result == 1){
+            jsonObject.put("result","1");
+        }else{
+            jsonObject.put("result","0");
+        }
+        return jsonObject;
     }
 }

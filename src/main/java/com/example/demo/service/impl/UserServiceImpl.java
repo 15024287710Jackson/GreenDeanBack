@@ -59,5 +59,25 @@ public class UserServiceImpl implements UserService {
         return userInfomationMapper.selectUserVideoInfo(id);
     }
 
+    @Override
+    public int delectPicInfo(String Number) {
+        return userInfomationMapper.delectPicInfo(Number);
+    }
+
+    @Override
+    public int delectVideoInfo(String Number) {
+        return userInfomationMapper.delectVideoInfo(Number);
+    }
+
+    @Override
+    public int updatePicInfo(String number, String id, String message, String pictureUrl) {
+        return userInfomationMapper.updatePicInfo(number,id,message,pictureUrl);
+    }
+
+    @Override
+    public int updateVideoInfo(String number, String id, String message, String videoUrl) {
+        return userInfomationMapper.updateVideoInfo(number,id,message,videoUrl);
+    }
+
 }
 
