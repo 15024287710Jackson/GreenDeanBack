@@ -79,5 +79,15 @@ public class UserServiceImpl implements UserService {
         return userInfomationMapper.updateVideoInfo(number,id,message,videoUrl);
     }
 
+    @Override
+    public UserPicInfo randomSelectImage() {
+        return userInfomationMapper.randomSelectImage();
+    }
+
+    @Override
+    public UserVideoInfo randomSelectVideo() {
+        return userInfomationMapper.randomSelectVideo();
+    }
+
 }
 

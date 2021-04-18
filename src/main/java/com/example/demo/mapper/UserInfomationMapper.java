@@ -65,4 +65,10 @@ public interface UserInfomationMapper {
                       @Param("id") String id,
                       @Param("message") String message,
                       @Param("videoUrl") String videoUrl);
+
+    @Select("SELECT * FROM UserPicture ORDER BY RAND() LIMIT 1")
+    UserPicInfo randomSelectImage();
+
+    @Select("SELECT * FROM UserVideo ORDER BY RAND() LIMIT 1")
+    UserVideoInfo randomSelectVideo();
 }

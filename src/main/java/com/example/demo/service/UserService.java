@@ -38,4 +38,7 @@ public interface UserService {
     int updatePicInfo(String number,String id,String message,String pictureUrl);
 
     int updateVideoInfo(String number,String id,String message,String videoUrl);
+
+    UserPicInfo randomSelectImage();
+    UserVideoInfo randomSelectVideo();
 }

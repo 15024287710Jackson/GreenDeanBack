@@ -195,4 +195,26 @@ public class UpLoadFileController {
         }
         return jsonObject;
     }
+
+    @RequestMapping("/randomSelectImage")
+    public UserPicInfo randomselectImage(){
+        UserPicInfo userPicInfo = new UserPicInfo();
+        try{
+            userPicInfo=userServiceImpl.randomSelectImage();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return userPicInfo;
+    }
+
+    @RequestMapping("/randomSelectVideo")
+    public UserVideoInfo randomSelectVideo(){
+        UserVideoInfo userVideoInfo = new UserVideoInfo();
+        try{
+            userVideoInfo=userServiceImpl.randomSelectVideo();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return userVideoInfo;
+    }
 }
