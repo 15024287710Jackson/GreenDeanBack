@@ -7,8 +7,10 @@ import javax.websocket.server.ServerEndpoint;
 import com.alibaba.fastjson.JSON;
 import com.example.demo.chatRoom.action.Msg;
 import com.example.demo.chatRoom.action.User;
+import com.example.demo.chatRoom.action.UserList;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -34,6 +36,7 @@ public class WebSocketTest {
         User user = new User();
         user.setUserMsg(new Msg(false,"有新人加入聊天",true));
         sendAll(user.toString());
+
         //将新用户存入在线的组
         clients.put(userId, session);
     }
@@ -72,83 +75,100 @@ public class WebSocketTest {
      * @param message  消息对象
      */
     @OnMessage
-    public void onMessage(String message) {
+    public void onMessage(String message){
         System.out.println("服务端收到客户端发来的消息:"+message);
         User user = JSON.parseObject(message, User.class);
         user.getUserMsg().setSend(false);
 
-        if(user.getUserMsg().isPrivate()==true)
+        if(user.getUserMsg().isPrivate())
         {
-            sendPrivate(user,user.getUserMsg().getTargetUserID());
+            sendInfo(user.toString(),user.getUserMsg().getTargetUserID());
         }
 
         if(user.getUserMsg().isConfi())//如果是配置语句
         {
+            System.out.println("get config!");
 
             //客户端发起私聊，请求在线用户名字头像
-            if(user.getUserMsg().getContent() == "ShEnQiNgLiEbIaO")
+            if(user.getUserMsg().getContent().equals("ShEnQiNgLiEbIaO"))
             {
-                Session session1 = clients.get(userId);
+                System.out.println("StartSendList!");
+                //Session session1 = clients.get(user.getUserId());
                 //Msg msg888 = new Msg(true,"KaiShiChuanSong",false);
                 //User tempUser888 = new User();
                 //tempUser888.setUserMsg(msg888);
                 //tempUser888.getUserMsg().setConfi(true);
                 //session1.getAsyncRemote().sendText(tempUser888.toString());
+                UserList userlist = new UserList();
 
-                for (Map.Entry<String, User> sessionEntry : YongHuMen.entrySet()) {
-                    if (!sessionEntry.getKey().equals(userId)){
+                for (Map.Entry<String, User> sessionEntry : YongHuMen.entrySet())
+                {
+                    if (!sessionEntry.getKey().equals(user.getUserId())) {
                         User TempUser0000 = sessionEntry.getValue();
                         TempUser0000.getUserMsg().setConfi(true);
                         TempUser0000.getUserMsg().setContent("gEiNiShEnQiNgLiEbIaO");
-                        session1.getAsyncRemote().sendText(sessionEntry.getValue().toString());
+                        userlist.addUser(TempUser0000);
                     }
                 }
-
-                Msg msg999 = new Msg(true,"JieShuChuanSong",false);
-                User tempUser999 = new User();
-                tempUser999.setUserMsg(msg999);
-                tempUser999.getUserMsg().setConfi(true);
-                session1.getAsyncRemote().sendText(tempUser999.toString());
-
-
-
-
+                sendInfo(userlist.toString(),user.getUserId());//发送
+                userlist.cleanuser();
+                return;
 
             }
+
+
 
             //客户端第一次上传头像和名字
-            if(user.getUserMsg().getContent() == "PaSsThEtOuXiAnGhEmInGzI")
+            if(user.getUserMsg().getContent().equals("PaSsThEtOuXiAnGhEmInGzI"))
             {
                 YongHuMen.put(user.getUserId(),user);
+                user.getUserMsg().setConfi(true);
+                user.getUserMsg().setContent("NEWUSERCOME");
+                this.sendAll(user.toString());
+
+                return;
             }
 
-
-
             //配置语句直接返回
-            return;
         }
 
 
-        this.sendAll(user.toString());
+        else this.sendAll(user.toString());//如果不是配置语句或者私聊语句就直接发送
     }
+
+
+
 
     /**
      * 群发消息
      * @param message 消息内容
      */
     private void sendAll(String message) {
+        User user = JSON.parseObject(message, User.class);
         for (Map.Entry<String, Session> sessionEntry : clients.entrySet()) {
-            if (!sessionEntry.getKey().equals(userId)){
+            if (!sessionEntry.getKey().equals(user.getUserId())){
                 sessionEntry.getValue().getAsyncRemote().sendText(message);
             }
         }
     }
 
-    private void sendPrivate(User user,String targetuserID)
-    {
-        Session session2 = clients.get(targetuserID);
-        user.getUserMsg().setPrivate(true);
-        session2.getAsyncRemote().sendText(user.toString());
+
+    //private void sendPrivate(User user,String targetuserID) throws IOException {
+        //Session session2 = clients.get(targetuserID);
+    //    user.getUserMsg().setPrivate(true);
+    //    clients.get(targetuserID).getAsyncRemote().sendText(user.toString());
+    //}
+
+
+    public static void sendInfo(String text,@PathParam("userId") String userId) {
+        try {
+            Session session = clients.get(userId);
+            if (session != null && session.isOpen()) {
+                session.getAsyncRemote().sendText(text);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
