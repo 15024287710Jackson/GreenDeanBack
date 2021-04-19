@@ -101,10 +101,23 @@ public class WebSocketTest {
                     System.out.println("关闭连接！");
                     clients.get(user.getUserId()).close();
                 }
-            }//关闭连接
+            }//当客户端退出聊天室时关闭连接
+            if(user.getUserMsg().getContent().equals("CloseTheSessionPLZandOPENprivate"))
+            {
+                if(clients.get(user.getUserId())!=null && clients.get(user.getUserId()).isOpen())
+                {
+                    user.getUserMsg().setContent("okyoucanclose");
+                    sendInfo(user.toString(),user.getUserId());
+                    System.out.println("关闭连接！");
+                    clients.get(user.getUserId()).close();
+                }
+            }//当客户切换到私聊时 关闭连接并发回允许
+
+
+
 
             //客户端发起私聊，请求在线用户名字头像
-         /*   if(user.getUserMsg().getContent().equals("ShEnQiNgLiEbIaO"))
+            if(user.getUserMsg().getContent().equals("ShEnQiNgLiEbIaO"))
                 {
                 System.out.println("StartSendList!");
                 //Session session1 = clients.get(user.getUserId());
@@ -137,7 +150,7 @@ public class WebSocketTest {
                 userlist.cleanuser();
                 return;
 
-            }*/
+            }
 
 
 
