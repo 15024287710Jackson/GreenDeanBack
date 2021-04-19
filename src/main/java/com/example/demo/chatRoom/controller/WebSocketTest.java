@@ -54,7 +54,9 @@ public class WebSocketTest {
         System.out.println("session.getId():"+session.getId());
 
         User user = new User();
+        user.setUserId(userId);
         user.setUserMsg(new Msg(false,"有用户断开聊天",true));
+        //user.getUserMsg().setConfi(true);
         sendAll(user.toString());
 
         //将掉线的用户移除在线的组里
