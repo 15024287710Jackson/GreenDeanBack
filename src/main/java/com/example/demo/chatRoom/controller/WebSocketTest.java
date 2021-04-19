@@ -84,26 +84,14 @@ public class WebSocketTest {
         User user = JSON.parseObject(message, User.class);
         user.getUserMsg().setSend(false);
 
-        if(user.getUserMsg().isPrivate())
-        {
-            if(clients.get(user.getUserMsg().getTargetUserID())!=null && clients.get(user.getUserMsg().getTargetUserID()).isOpen())
-            {
-                sendInfo(user.toString(),user.getUserMsg().getTargetUserID());
-            }
-            else
-            {
-                try {
-                Thread.sleep(1000); //1000 毫秒，也就是1秒.
-                     } catch(InterruptedException ex) {
-                Thread.currentThread().interrupt();
-                }
-                if(clients.get(user.getUserMsg().getTargetUserID())!=null && clients.get(user.getUserMsg().getTargetUserID()).isOpen())
-                {
-                    sendInfo(user.toString(),user.getUserMsg().getTargetUserID());
-                }
-            }
-
-        }
+        //if(user.getUserMsg().isPrivate())
+        //{
+        //    if(clients.get(user.getUserMsg().getTargetUserID())!=null && clients.get(user.getUserMsg().getTargetUserID()).isOpen())
+        //    {
+        //        sendInfo(user.toString(),user.getUserMsg().getTargetUserID());
+       //     }
+//
+        //}
 
         if(user.getUserMsg().isConfi())//如果是配置语句
         {
