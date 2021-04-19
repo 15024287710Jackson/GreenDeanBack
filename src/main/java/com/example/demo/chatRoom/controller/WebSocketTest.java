@@ -75,23 +75,37 @@ public class WebSocketTest {
      * @param message  消息对象
      */
     @OnMessage
-    public void onMessage(String message){
+    public void onMessage(String message) throws IOException {
         System.out.println("服务端收到客户端发来的消息:"+message);
         User user = JSON.parseObject(message, User.class);
         user.getUserMsg().setSend(false);
 
         if(user.getUserMsg().isPrivate())
         {
-            sendInfo(user.toString(),user.getUserMsg().getTargetUserID());
+            if(clients.get(user.getUserId())!=null && clients.get(user.getUserId()).isOpen())
+            {
+                sendInfo(user.toString(),user.getUserMsg().getTargetUserID());
+            }
+
         }
 
         if(user.getUserMsg().isConfi())//如果是配置语句
         {
             System.out.println("get config!");
 
-            //客户端发起私聊，请求在线用户名字头像
-            if(user.getUserMsg().getContent().equals("ShEnQiNgLiEbIaO"))
+            if(user.getUserMsg().getContent().equals("CloseTheSessionPLZ"))
             {
+
+                if(clients.get(user.getUserId())!=null && clients.get(user.getUserId()).isOpen())
+                {
+                    System.out.println("关闭连接！");
+                    clients.get(user.getUserId()).close();
+                }
+            }//关闭连接
+
+            //客户端发起私聊，请求在线用户名字头像
+         /*   if(user.getUserMsg().getContent().equals("ShEnQiNgLiEbIaO"))
+                {
                 System.out.println("StartSendList!");
                 //Session session1 = clients.get(user.getUserId());
                 //Msg msg888 = new Msg(true,"KaiShiChuanSong",false);
@@ -108,13 +122,22 @@ public class WebSocketTest {
                         TempUser0000.getUserMsg().setConfi(true);
                         TempUser0000.getUserMsg().setContent("gEiNiShEnQiNgLiEbIaO");
                         userlist.addUser(TempUser0000);
+                        userlist.setEmpty(false);
                     }
                 }
-                sendInfo(userlist.toString(),user.getUserId());//发送
+                userlist.setIsUserList(true);
+                if(clients.get(user.getUserId())!=null&&clients.get(user.getUserId()).isOpen())
+                {
+                    sendInfo(userlist.toString(),user.getUserId());
+                }
+                else {
+                    System.out.println("已关闭1");
+                }
+                //发送
                 userlist.cleanuser();
                 return;
 
-            }
+            }*/
 
 
 
@@ -122,8 +145,9 @@ public class WebSocketTest {
             if(user.getUserMsg().getContent().equals("PaSsThEtOuXiAnGhEmInGzI"))
             {
                 YongHuMen.put(user.getUserId(),user);
-                user.getUserMsg().setConfi(true);
-                user.getUserMsg().setContent("NEWUSERCOME");
+                User tempnewuser = user;
+                tempnewuser.getUserMsg().setConfi(true);
+                tempnewuser.getUserMsg().setContent("NEWUSERCOME");
                 this.sendAll(user.toString());
 
                 return;
@@ -147,7 +171,11 @@ public class WebSocketTest {
         User user = JSON.parseObject(message, User.class);
         for (Map.Entry<String, Session> sessionEntry : clients.entrySet()) {
             if (!sessionEntry.getKey().equals(user.getUserId())){
-                sessionEntry.getValue().getAsyncRemote().sendText(message);
+                if(sessionEntry.getValue() != null && sessionEntry.getValue().isOpen())
+                {
+                    sessionEntry.getValue().getAsyncRemote().sendText(message);
+                }
+
             }
         }
     }
