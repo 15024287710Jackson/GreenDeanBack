@@ -86,9 +86,21 @@ public class WebSocketTest {
 
         if(user.getUserMsg().isPrivate())
         {
-            if(clients.get(user.getUserId())!=null && clients.get(user.getUserId()).isOpen())
+            if(clients.get(user.getUserMsg().getTargetUserID())!=null && clients.get(user.getUserMsg().getTargetUserID()).isOpen())
             {
                 sendInfo(user.toString(),user.getUserMsg().getTargetUserID());
+            }
+            else
+            {
+                try {
+                Thread.sleep(1000); //1000 毫秒，也就是1秒.
+                     } catch(InterruptedException ex) {
+                Thread.currentThread().interrupt();
+                }
+                if(clients.get(user.getUserMsg().getTargetUserID())!=null && clients.get(user.getUserMsg().getTargetUserID()).isOpen())
+                {
+                    sendInfo(user.toString(),user.getUserMsg().getTargetUserID());
+                }
             }
 
         }
@@ -120,7 +132,7 @@ public class WebSocketTest {
 
 
 
-            //客户端发起私聊，请求在线用户名字头像
+            //客户端开始私聊，请求在线用户名字头像
             if(user.getUserMsg().getContent().equals("ShEnQiNgLiEbIaO"))
                 {
                 System.out.println("StartSendList!");
