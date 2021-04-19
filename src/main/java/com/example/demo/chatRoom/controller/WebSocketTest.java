@@ -5,6 +5,8 @@ import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.example.demo.chatRoom.action.Msg;
 import com.example.demo.chatRoom.action.User;
 import com.example.demo.chatRoom.action.UserList;
@@ -126,7 +128,31 @@ public class WebSocketTest {
                 //tempUser888.setUserMsg(msg888);
                 //tempUser888.getUserMsg().setConfi(true);
                 //session1.getAsyncRemote().sendText(tempUser888.toString());
-                UserList userlist = new UserList();
+
+
+                ArrayList<User> userArrayList= new ArrayList<User>();
+                for (Map.Entry<String, User> sessionEntry : YongHuMen.entrySet())
+                {
+                    if (!sessionEntry.getKey().equals(user.getUserId())) {
+                        User TempUser0000 = sessionEntry.getValue();
+                        TempUser0000.getUserMsg().setConfi(true);
+                        TempUser0000.getUserMsg().setContent("gEiNiShEnQiNgLiEbIaO");
+                        userArrayList.add(TempUser0000);
+                    }
+                }
+                if(clients.get(user.getUserId())!=null&&clients.get(user.getUserId()).isOpen()&&!userArrayList.isEmpty())
+                {
+                    JSONArray userlistjsonArray = JSONArray.parseArray(JSONObject.toJSONString(userArrayList));
+                    System.out.println(userlistjsonArray.toJSONString());
+                    sendInfo(userlistjsonArray.toJSONString(),user.getUserId());
+                }
+                else {
+                    System.out.println("已关闭1");
+                }
+                return;
+
+
+                /*UserList userlist = new UserList();
 
                 for (Map.Entry<String, User> sessionEntry : YongHuMen.entrySet())
                 {
@@ -148,7 +174,7 @@ public class WebSocketTest {
                 }
                 //发送
                 userlist.cleanuser();
-                return;
+                return;*/
 
             }
 
@@ -161,8 +187,8 @@ public class WebSocketTest {
                 User tempnewuser = user;
                 tempnewuser.getUserMsg().setConfi(true);
                 tempnewuser.getUserMsg().setContent("NEWUSERCOME");
-                this.sendAll(user.toString());
 
+                this.sendAll(user.toString());
                 return;
             }
 
